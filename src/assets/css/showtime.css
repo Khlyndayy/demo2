@@ -1,0 +1,260 @@
+/* ===================================
+   SHOWTIME PAGE
+   =================================== */
+
+.showtime-page {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Header */
+.showtime-header {
+  background: white;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.btn-back {
+  padding: 0.5rem 1.5rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+  transform: translateX(-3px);
+}
+
+.movie-info-header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.movie-thumb {
+  width: 80px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.movie-info-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.movie-info-header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Date Selector */
+.date-selector {
+  background: white;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.date-selector h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.date-buttons {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.date-buttons::-webkit-scrollbar {
+  height: 6px;
+}
+
+.date-buttons::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.date-buttons::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.date-btn {
+  padding: 1rem 2rem;
+  background-color: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.3s;
+  color: #333;
+}
+
+.date-btn:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.date-btn.active {
+  background-color: #e50914;
+  color: white;
+  border-color: #e50914;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+}
+
+/* Showtimes Container */
+.showtimes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.cinema-block {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cinema-info {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.cinema-info h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.cinema-address {
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.cinema-facilities {
+  color: #e50914;
+  font-weight: 500;
+}
+
+/* Showtimes Grid */
+.showtimes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.showtime-btn {
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #dee2e6;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.showtime-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e50914 0%, #f40612 100%);
+  border-color: #e50914;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.3);
+}
+
+.showtime-btn:hover:not(:disabled) .showtime-time,
+.showtime-btn:hover:not(:disabled) .showtime-room,
+.showtime-btn:hover:not(:disabled) .showtime-price,
+.showtime-btn:hover:not(:disabled) .showtime-seats {
+  color: white;
+}
+
+.showtime-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #e9ecef;
+}
+
+.showtime-time {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e50914;
+  margin-bottom: 0.5rem;
+}
+
+.showtime-room {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.showtime-price {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.showtime-seats {
+  font-size: 0.85rem;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.showtime-btn:disabled .showtime-seats {
+  color: #dc3545;
+}
+
+/* No Showtimes */
+.no-showtimes {
+  background: white;
+  padding: 3rem;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-showtimes p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .movie-info-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .movie-info-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .date-buttons {
+    flex-wrap: wrap;
+  }
+
+  .showtimes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .showtime-time {
+    font-size: 1.2rem;
+  }
+}
