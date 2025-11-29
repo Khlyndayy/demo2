@@ -47,14 +47,7 @@ const LoginPage = () => {
         return;
       }
 
-      // Kiểm tra tài khoản có bị khóa không
-      if (!user.is_active) {
-        alert("❌ Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên!");
-        setLoading(false);
-        return;
-      }
-
-      // Hash password nhập vào và so sánh với database
+      // Hash password và kiểm tra
       const passwordHash = await hashPassword(password);
 
       if (user.password_hash !== passwordHash) {
@@ -63,70 +56,37 @@ const LoginPage = () => {
         return;
       }
 
-      // Cập nhật last_login
-      await supabase
-        .from("users")
-        .update({ last_login: new Date().toISOString() })
-        .eq("id", user.id);
-
-      // Đăng nhập thành công - Lưu thông tin user
+      // Đăng nhập thành công
       const userData = {
         id: user.id,
         username: user.username,
         email: user.email,
-        fullname: user.fullname,
+        full_name: user.fullname,
         phone: user.phone,
         loyalty_points: user.loyalty_points,
-        membership_tier: user.membership_tier,
-        role: user.role, // Lấy role từ database thay vì hardcode
-        avatar_url: user.avatar_url,
+        role: user.username === "admin" ? "admin" : "user",
         loginTime: new Date().toISOString(),
       };
 
       localStorage.setItem("user", JSON.stringify(userData));
 
-      // Thông báo theo role
-      let message = "";
-      if (user.role === "admin") {
-        message = `🎉 Chào mừng Quản trị viên ${user.fullname}!`;
-      } else if (user.role === "staff") {
-        message = `🎉 Chào mừng Nhân viên ${user.fullname}!`;
-      } else {
-        message = `🎉 Chào mừng ${user.fullname}! 
-        
-🏆 Hạng thành viên: ${getMembershipLabel(user.membership_tier)}
-💎 Điểm thưởng: ${user.loyalty_points} điểm`;
-      }
+      // Thông báo thành công
+      const message =
+        user.username === "admin"
+          ? `🎉 Chào mừng Quản trị viên ${user.fullname}!`
+          : `🎉 Chào mừng ${user.fullname}! Bạn có ${user.loyalty_points} điểm thưởng.`;
 
       alert(message);
 
-      // Chuyển hướng theo role
-      const from = location.state?.from?.pathname;
-
-      if (user.role === "admin") {
-        navigate("/admin/dashboard", { replace: true });
-      } else if (user.role === "staff") {
-        navigate("/staff/dashboard", { replace: true });
-      } else {
-        navigate(from || "/", { replace: true });
-      }
+      // Chuyển hướng
+      const from = location.state?.from?.pathname || "/";
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("Lỗi:", err);
       alert("❌ Đã xảy ra lỗi. Vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
-  };
-
-  // Helper function: Lấy tên hạng thành viên
-  const getMembershipLabel = (tier) => {
-    const labels = {
-      bronze: "Đồng 🥉",
-      silver: "Bạc 🥈",
-      gold: "Vàng 🥇",
-      platinum: "Bạch Kim 💎",
-    };
-    return labels[tier] || tier;
   };
 
   return (
@@ -287,15 +247,15 @@ const LoginPage = () => {
                   </span>
                 </div>
                 <div className="demo-item">
-                  <i className="fas fa-briefcase"></i>
+                  <i className="fas fa-user"></i>
                   <span>
-                    <strong>Staff:</strong> staff01 / 123456
+                    <strong>User:</strong> user01 / 123456
                   </span>
                 </div>
                 <div className="demo-item">
                   <i className="fas fa-user"></i>
                   <span>
-                    <strong>User:</strong> dhgia1 / 123456
+                    <strong>User:</strong> user02 / 123456
                   </span>
                 </div>
               </div>
