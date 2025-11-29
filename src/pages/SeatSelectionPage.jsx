@@ -35,6 +35,14 @@ const SeatSelectionPage = () => {
       if (showtimeError) throw showtimeError;
       setShowtime(showtimeData);
 
+      // Debug log
+      console.log("Showtime data loaded:", {
+        id: showtimeData.id,
+        base_price: showtimeData.base_price,
+        vip_price: showtimeData.vip_price,
+        couple_price: showtimeData.couple_price,
+      });
+
       // Lấy tất cả ghế của phòng
       const { data: seatsData, error: seatsError } = await supabase
         .from("seats")
@@ -79,11 +87,31 @@ const SeatSelectionPage = () => {
     });
   };
 
+  // Hàm tính giá ghế dựa trên loại ghế và showtime
   const getSeatPrice = (seatType) => {
-    const basePrice = showtime?.price || 0;
-    if (seatType === "vip") return basePrice * 1.5;
-    if (seatType === "couple") return basePrice * 2;
-    return basePrice;
+    if (!showtime) return 0;
+
+    const basePrice = showtime.base_price || 0;
+    const vipPrice = showtime.vip_price || basePrice * 1.5;
+    const couplePrice = showtime.couple_price || basePrice * 2;
+
+    // Debug log
+    console.log("Calculating price for:", seatType, {
+      basePrice,
+      vipPrice,
+      couplePrice,
+    });
+
+    switch (seatType) {
+      case "vip":
+        return vipPrice;
+      case "couple":
+        return couplePrice;
+      case "sweetbox":
+        return couplePrice * 1.2; // Sweetbox đắt hơn couple 20%
+      default:
+        return basePrice;
+    }
   };
 
   const getTotalAmount = () => {
@@ -99,7 +127,7 @@ const SeatSelectionPage = () => {
       return;
     }
 
-    // Lưu thông tin vào sessionStorage để dùng ở trang confirm
+    // Lưu thông tin vào sessionStorage
     sessionStorage.setItem(
       "bookingData",
       JSON.stringify({
@@ -181,6 +209,7 @@ const SeatSelectionPage = () => {
                     const isSelected = selectedSeats.find(
                       (s) => s.id === seat.id
                     );
+                    const seatPrice = getSeatPrice(seat.seat_type);
 
                     return (
                       <button
@@ -190,9 +219,16 @@ const SeatSelectionPage = () => {
                         } ${isSelected ? "selected" : ""}`}
                         onClick={() => handleSeatClick(seat)}
                         disabled={isBooked}
-                        title={`${row}${seat.seat_number} - ${seat.seat_type}`}
+                        title={`${row}${seat.seat_number} - ${
+                          seat.seat_type
+                        } - ${formatPrice(seatPrice)}`}
                       >
-                        {seat.seat_number}
+                        <span className="seat-number">{seat.seat_number}</span>
+                        {!isBooked && (
+                          <span className="seat-price-label">
+                            {(seatPrice / 1000).toFixed(0)}k
+                          </span>
+                        )}
                       </button>
                     );
                   })}
@@ -201,27 +237,46 @@ const SeatSelectionPage = () => {
             ))}
           </div>
 
-          {/* Legend */}
+          {/* Legend with Prices */}
           <div className="seat-legend">
             <div className="legend-item">
               <span className="legend-seat normal"></span>
-              <span>Ghế thường</span>
+              <div className="legend-info">
+                <span>Ghế thường</span>
+                <strong>{formatPrice(showtime.base_price)}</strong>
+              </div>
             </div>
             <div className="legend-item">
               <span className="legend-seat vip"></span>
-              <span>Ghế VIP</span>
+              <div className="legend-info">
+                <span>Ghế VIP</span>
+                <strong>
+                  {formatPrice(showtime.vip_price || showtime.base_price * 1.5)}
+                </strong>
+              </div>
             </div>
             <div className="legend-item">
               <span className="legend-seat couple"></span>
-              <span>Ghế đôi</span>
+              <div className="legend-info">
+                <span>Ghế đôi</span>
+                <strong>
+                  {formatPrice(
+                    showtime.couple_price || showtime.base_price * 2
+                  )}
+                </strong>
+              </div>
             </div>
             <div className="legend-item">
               <span className="legend-seat selected"></span>
-              <span>Đang chọn</span>
+              <div className="legend-info">
+                <span>Đang chọn</span>
+              </div>
             </div>
             <div className="legend-item">
               <span className="legend-seat booked"></span>
-              <span>Đã đặt</span>
+              <div className="legend-info">
+                <span>Đã đặt</span>
+              </div>
             </div>
           </div>
         </div>
@@ -236,10 +291,16 @@ const SeatSelectionPage = () => {
               ) : (
                 <div className="selected-seats-list">
                   {selectedSeats.map((seat) => (
-                    <span key={seat.id} className="seat-tag">
-                      {seat.seat_row}
-                      {seat.seat_number}
-                    </span>
+                    <div key={seat.id} className="seat-tag-detail">
+                      <span className="seat-tag">
+                        {seat.seat_row}
+                        {seat.seat_number}
+                      </span>
+                      <span className="seat-tag-type">({seat.seat_type})</span>
+                      <span className="seat-tag-price">
+                        {formatPrice(getSeatPrice(seat.seat_type))}
+                      </span>
+                    </div>
                   ))}
                 </div>
               )}
@@ -250,8 +311,12 @@ const SeatSelectionPage = () => {
                 <span>Tổng số ghế:</span>
                 <strong>{selectedSeats.length}</strong>
               </div>
+              <div className="price-row">
+                <span>Thành tiền:</span>
+                <strong>{formatPrice(getTotalAmount())}</strong>
+              </div>
               <div className="price-row total">
-                <span>Tổng tiền:</span>
+                <span>Tổng thanh toán:</span>
                 <strong className="total-price">
                   {formatPrice(getTotalAmount())}
                 </strong>
@@ -263,7 +328,7 @@ const SeatSelectionPage = () => {
               onClick={handleContinue}
               disabled={selectedSeats.length === 0}
             >
-              Tiếp tục
+              Tiếp tục thanh toán
             </button>
           </div>
         </div>

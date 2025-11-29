@@ -97,8 +97,8 @@
 
 /* Seat Styles */
 .seat {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 55px;
   border-radius: 8px 8px 0 0;
   border: 2px solid;
   cursor: pointer;
@@ -108,6 +108,27 @@
   background: linear-gradient(to bottom, #4a4a4a 0%, #333 100%);
   border-color: #666;
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0.25rem;
+}
+
+.seat-number {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.seat-price-label {
+  font-size: 0.7rem;
+  opacity: 0.9;
+  font-weight: 600;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .seat:hover:not(:disabled) {
@@ -120,15 +141,30 @@
   border-color: #2e6da4;
 }
 
+.seat.normal .seat-price-label {
+  color: rgba(255, 255, 255, 0.95);
+}
+
 .seat.vip {
   background: linear-gradient(to bottom, #f39c12 0%, #e67e22 100%);
   border-color: #d35400;
+}
+
+.seat.vip .seat-price-label {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .seat.couple {
   width: 85px;
   background: linear-gradient(to bottom, #e74c3c 0%, #c0392b 100%);
   border-color: #a93226;
+}
+
+.seat.couple .seat-price-label {
+  color: #fff;
+  font-size: 0.75rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .seat.selected {
@@ -164,7 +200,22 @@
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+}
+
+.legend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.legend-info span {
+  font-size: 0.9rem;
+}
+
+.legend-info strong {
+  color: #2ecc71;
+  font-size: 0.95rem;
 }
 
 .legend-seat {
@@ -228,8 +279,19 @@
 
 .selected-seats-list {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.seat-tag-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(46, 204, 113, 0.2);
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #2ecc71;
 }
 
 .seat-tag {
@@ -239,6 +301,18 @@
   border-radius: 15px;
   font-weight: bold;
   font-size: 0.9rem;
+}
+
+.seat-tag-type {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: capitalize;
+}
+
+.seat-tag-price {
+  font-size: 0.85rem;
+  color: #2ecc71;
+  font-weight: bold;
 }
 
 .price-info {
